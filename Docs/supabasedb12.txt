@@ -1,0 +1,71 @@
+-- DROP SCHEMA db12;
+
+CREATE SCHEMA db12 AUTHORIZATION postgres;
+-- db12.patient_profile definition
+
+-- Drop table
+
+-- DROP TABLE db12.patient_profile;
+
+CREATE TABLE db12.patient_profile (
+	patient_id int4 NOT NULL,
+	region varchar(50) DEFAULT 'Kaunas'::character varying NOT NULL,
+	full_name varchar(100) NOT NULL,
+	birth_date date NOT NULL,
+	phone varchar(20) NOT NULL,
+	insurance_policy_no varchar(50) NOT NULL,
+	CONSTRAINT patient_profile_pkey PRIMARY KEY (patient_id),
+	CONSTRAINT patient_profile_region_check CHECK (((region)::text = 'Kaunas'::text))
+);
+
+
+-- db12.visit definition
+
+-- Drop table
+
+-- DROP TABLE db12.visit;
+
+CREATE TABLE db12.visit (
+	visit_id int4 NOT NULL,
+	region varchar(50) DEFAULT 'Kaunas'::character varying NOT NULL,
+	patient_id int4 NOT NULL,
+	payment_status varchar(50) NOT NULL,
+	insurance_covered bool NOT NULL,
+	total_amount_eur numeric(10, 2) NOT NULL,
+	CONSTRAINT visit_pkey PRIMARY KEY (visit_id),
+	CONSTRAINT visit_region_check CHECK (((region)::text = 'Kaunas'::text)),
+	CONSTRAINT visit_patient_id_fkey FOREIGN KEY (patient_id) REFERENCES db12.patient_profile(patient_id)
+);
+
+
+-- db12.insurance_claim definition
+
+-- Drop table
+
+-- DROP TABLE db12.insurance_claim;
+
+CREATE TABLE db12.insurance_claim (
+	claim_id int4 NOT NULL,
+	visit_id int4 NOT NULL,
+	insurance_company varchar(100) NOT NULL,
+	claim_amount numeric(10, 2) NOT NULL,
+	CONSTRAINT insurance_claim_pkey PRIMARY KEY (claim_id),
+	CONSTRAINT insurance_claim_visit_id_fkey FOREIGN KEY (visit_id) REFERENCES db12.visit(visit_id)
+);
+
+
+-- db12.payment definition
+
+-- Drop table
+
+-- DROP TABLE db12.payment;
+
+CREATE TABLE db12.payment (
+	payment_id int4 NOT NULL,
+	visit_id int4 NOT NULL,
+	amount_paid numeric(10, 2) NOT NULL,
+	payment_method varchar(50) NOT NULL,
+	paid_at timestamp NOT NULL,
+	CONSTRAINT payment_pkey PRIMARY KEY (payment_id),
+	CONSTRAINT payment_visit_id_fkey FOREIGN KEY (visit_id) REFERENCES db12.visit(visit_id)
+);

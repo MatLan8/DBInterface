@@ -1,0 +1,110 @@
+{
+  "status": {
+    "tables": [
+      {
+        "name": "doctor",
+        "definition": {
+          "columns": {
+            "doctor_id": {
+              "type": "int"
+            },
+            "full_name": {
+              "type": "text"
+            },
+            "license_number": {
+              "type": "text"
+            },
+            "specialty": {
+              "type": "text"
+            },
+            "workplace_clinic": {
+              "type": "text"
+            }
+          },
+          "primaryKey": {
+            "partitionBy": [
+              "doctor_id"
+            ],
+            "partitionSort": {}
+          }
+        }
+      },
+      {
+        "name": "visit",
+        "definition": {
+          "columns": {
+            "visit_id": {
+              "type": "int"
+            },
+            "diagnosis": {
+              "type": "text"
+            },
+            "doctor_id": {
+              "type": "int"
+            },
+            "lab_results": {
+              "type": "list",
+              "valueType": {
+                "type": "userDefined",
+                "udtName": "lab_result_udt"
+              },
+              "apiSupport": {
+                "createTable": false,
+                "insert": true,
+                "read": true,
+                "filter": true,
+                "cqlDefinition": "frozen<list<frozen<db21.lab_result_udt>>>"
+              }
+            },
+            "prescriptions": {
+              "type": "list",
+              "valueType": {
+                "type": "userDefined",
+                "udtName": "prescription_udt"
+              },
+              "apiSupport": {
+                "createTable": false,
+                "insert": true,
+                "read": true,
+                "filter": true,
+                "cqlDefinition": "frozen<list<frozen<db21.prescription_udt>>>"
+              }
+            },
+            "procedures": {
+              "type": "list",
+              "valueType": {
+                "type": "userDefined",
+                "udtName": "medical_procedure_udt"
+              },
+              "apiSupport": {
+                "createTable": false,
+                "insert": true,
+                "read": true,
+                "filter": true,
+                "cqlDefinition": "frozen<list<frozen<db21.medical_procedure_udt>>>"
+              }
+            },
+            "region": {
+              "type": "text"
+            },
+            "symptoms": {
+              "type": "text"
+            },
+            "visit_date": {
+              "type": "timestamp"
+            },
+            "visit_location": {
+              "type": "text"
+            }
+          },
+          "primaryKey": {
+            "partitionBy": [
+              "visit_id"
+            ],
+            "partitionSort": {}
+          }
+        }
+      }
+    ]
+  }
+}
