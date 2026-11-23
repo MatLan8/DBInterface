@@ -158,7 +158,8 @@ Run the four global ops, show two DB-specific features, integrity check, failure
 | Horizontal sessions/schemas ready | Done (`db11`/`db12`, `db21`/`db22`) |
 | Global **READ** visit by id (`--read VISIT_ID`) | Done — probes `db11` then `db12`, then matching Cassandra keyspace, joins result |
 | Global INSERT / UPDATE / DELETE | Not yet |
-| Integrity check / failure demo / special Cassandra features | Not yet |
+| Cassandra-specific features | LWT doctor insert and TTL prescription update available |
+| Integrity check / failure demo |
 
 ### Example
 
