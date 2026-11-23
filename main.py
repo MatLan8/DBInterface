@@ -12,8 +12,16 @@ from db import connect_all
 from crud import COMMANDS as CRUD1
 from crud2 import COMMANDS as CRUD2
 import integrity
+import failure
+import demo
 
-COMMANDS = {**CRUD1, **CRUD2, integrity.NAME: integrity}
+COMMANDS = {
+    **CRUD1,
+    **CRUD2,
+    integrity.NAME: integrity,
+    failure.NAME: failure,
+    demo.NAME: demo,
+}
 
 
 def print_help():
