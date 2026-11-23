@@ -1,43 +1,36 @@
 """Entry point: connect to M1 + M2, then run the interactive command shell.
 
-CRUD logic lives in crud/*.py — register modules in crud/__init__.py.
+CRUD logic lives in crud/ (teammate 1) and crud2/ (teammate 2).
 """
+
+import shlex
 
 # db must be imported first (gevent monkey-patch for Cassandra on Python 3.12+)
 import db  # noqa: F401
 from db import connect_all
 
-import argparse
+from crud import COMMANDS as CRUD1
+from crud2 import COMMANDS as CRUD2
+import integrity
 
-from crud import COMMANDS
-from crud.read import read_visit
-from db import print_json
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Heterogeneous distributed DB demo (M1 Postgres + M2 Cassandra)."
-    )
-    parser.add_argument(
-        "--read",
-        type=int,
-        metavar="VISIT_ID",
-        help="One-shot global read, then exit (optional; otherwise interactive mode).",
-    )
-    return parser.parse_args()
+COMMANDS = {**CRUD1, **CRUD2, integrity.NAME: integrity}
 
 
 def print_help():
     print("\nCommands:")
     for name, module in COMMANDS.items():
-        print(f"  {module.USAGE:<22} {module.HELP}")
-    print(f"  {'help':<22} Show this help")
-    print(f"  {'exit / quit':<22} Close connections and leave")
+        print(f"  {module.USAGE:<28} {module.HELP}")
+    print(f"  {'help':<28} Show this help")
+    print(f"  {'exit / quit':<28} Close connections and leave")
 
 
 def handle_command(line):
     """Run one interactive command. Returns False when the shell should stop."""
-    parts = line.split()
+    try:
+        parts = shlex.split(line)
+    except ValueError as e:
+        print(f"Could not parse command: {e}")
+        return True
     if not parts:
         return True
 
@@ -73,17 +66,7 @@ def interactive_loop():
 
 
 def main():
-    args = parse_args()
     connect_all()
-
-    if args.read is not None:
-        print(f"\n=== Global READ visit_id={args.read} ===")
-        result = read_visit(args.read)
-        print_json(result)
-        if not result["found"]:
-            raise SystemExit(1)
-        return
-
     interactive_loop()
 
 

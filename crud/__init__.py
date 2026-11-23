@@ -1,13 +1,12 @@
-"""CRUD command modules. Each file exports NAME, HELP, USAGE, and run(args)."""
+"""Teammate 1 CRUD: doctor–patient visits."""
 
-from . import read
+from . import read_doctor_patient
 from . import insert
 from . import update
 from . import delete
 
-# Register interactive commands here as you implement them
 COMMAND_MODULES = (
-    read,
+    read_doctor_patient,
     insert,
     update,
     delete,

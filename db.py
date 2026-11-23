@@ -12,9 +12,18 @@ monkey.patch_all()
 import atexit
 import json
 import os
+import warnings
 from datetime import date, datetime
 from decimal import Decimal
 from pathlib import Path
+
+# gevent + libuv on Windows: Cassandra often schedules <1ms timeouts
+warnings.filterwarnings(
+    "ignore",
+    message="libuv only supports millisecond timer resolution.*",
+    category=UserWarning,
+    module=r"gevent\.timeout",
+)
 
 from dotenv import load_dotenv
 import psycopg2
